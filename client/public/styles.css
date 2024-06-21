@@ -1,0 +1,239 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-weight: 300;
+}
+body {
+  justify-content: space-between;
+  margin-bottom: 5%;
+  margin-top: 7%;
+  padding: 0;
+  font-family: "Noto Sans", sans-serif;
+  background-image: url("data:image/svg+xml,<svg id='patternId' width='100%' height='100%' xmlns='http://www.w3.org/2000/svg'><defs><pattern id='a' patternUnits='userSpaceOnUse' width='20' height='20' patternTransform='scale(1) rotate(50)'><rect x='0' y='0' width='100%' height='100%' fill='hsla(0,0%,100%,1)'/><path d='M10 15a5 5 0 110-10 5 5 0 010 10z'  stroke-width='0.5' stroke='hsla(130, 26%, 90%, 1)' fill='none'/></pattern></defs><rect width='800%' height='800%' transform='translate(0,0)' fill='url(%23a)'/></svg>");
+}
+
+/*Navbar Styles: */
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #b9eeba;
+  color: #153316;
+  opacity: 0.8;
+  width: 100%;
+  height: 70px;
+  position: fixed;
+  top: 0;
+  padding: 0 30px;
+}
+.navbar button:hover{
+  background-color: #317434;
+}
+ul {
+  display: flex;
+}
+li {
+  list-style-type: none;
+  padding: 10px;
+}
+.navbar .log {
+  font-weight: 400;
+}
+
+h1 {
+  margin-bottom: 20px;
+  font-family: Oswald, sans-serif;
+  font-size: 46px;
+}
+
+.buttons button {
+  margin: 0 10px;
+  padding: 10px 20px;
+  width: 17%;
+  border: none;
+  background-color: #4caf50;
+  color: white;
+  cursor: pointer;
+  font-family: Oswald, sans-serif;
+}
+
+.buttons button:hover {
+  background-color: #317434;
+}
+
+.myButtons {
+  margin: 0 10px;
+  padding: 10px 20px;
+  border: none;
+  display: flex;
+}
+
+.myButtons button {
+  margin: 10%;
+}
+
+/* CHECK USER STYLING */
+
+.user-validation {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #fff;
+  font-family: Oswald, sans-serif;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+input[type="text"],
+input[type="password"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.user-validation button {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  background-color: #4caf50;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.user-validation button:hover {
+  background-color: #317434;
+}
+
+.validation-message {
+  margin-top: 10px;
+  color: red;
+}
+
+/* CV FORM STYLING */
+.cv-form {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #fff;
+}
+
+.cv-form h2 {
+  text-align: center;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.cv-form label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.cv-form input[type="text"],
+.cv-form input[type="email"],
+.cv-form input[type="tel"],
+.cv-form textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.cv-form textarea {
+  height: 100px;
+}
+
+.cv-form button {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  background-color: #4caf50;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.cv-form button:hover {
+  background-color: #317434;
+}
+
+.cardButton{
+  display: flex;
+  justify-content: center;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.cardButton button{
+  margin: 10px;
+}
+
+.cardButton button:hover{
+  background-color: #317434;
+}
+
+/* 
+body {
+  font-family: "Source Sans Pro", sans-serif;
+  color: white;
+  font-weight: 300;
+  background: #50a3a2;
+  width: 100%;
+  height: 100%;
+}
+
+.container {
+  margin: 10% auto;
+  padding: 80px 0;
+  text-align: center;
+}
+
+.container h1 {
+  font-size: 40px;
+  font-weight: 200;
+}
+
+input {
+  border: 1px solid rgba(252, 252, 252, 0.4);
+  background-color: rgba(252, 252, 252, 0.2);
+  width: 250px;
+  border-radius: 3px;
+  font-family: "Source Sans Pro", sans-serif;
+  padding: 10px 15px;
+  margin: 0 auto 10px auto;
+  display: block;
+  text-align: center;
+  font-size: 18px;
+  color: white;
+  font-weight: 300;
+}
+
+button {
+  appearance: none;
+  outline: 0;
+  background-color: white;
+  border: 0;
+  padding: 10px 15px;
+  color: #50a3a2;
+  border-radius: 3px;
+  width: 250px;
+  font-size: 18px;
+} */
