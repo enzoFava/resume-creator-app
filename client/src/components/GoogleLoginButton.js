@@ -4,7 +4,7 @@ import GoogleButton from 'react-google-button';
 
 function GoogleLoginButton(){
     function handleLogin(){
-        window.location.href = "http://localhost:5000/auth/google";
+        window.location.href = "https://resume-creator-server.vercel.app/auth/google";
     };
 
     return (
