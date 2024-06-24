@@ -4,6 +4,9 @@ import "dotenv/config.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import pg from "pg";
+import passport from "passport";
+import {Strategy as GoogleStrategy} from "passport-google-oauth20";
+import session from "express-session";
 
 
 const port = process.env.PORT || 5000;
@@ -51,10 +54,50 @@ const authenticateToken = (req, res, next) => {
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
-app.use(cors());
-
+app.use(cors({
+  origin: "https://resume-creator-client.vercel.app/", // Allow requests from React app
+  credentials: true
+}));
+app.use(session({ secret: SECRET_KEY, resave: false, saveUninitialized: false }));
+app.use(passport.initialize());
+app.use(passport.session());
 
 const saltRounds = 10;
+
+passport.use(new GoogleStrategy({
+  clientID: process.env.GOOGLE_CLIENT_ID,
+  clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+  callbackURL: "https://resume-creator-server.vercel.app/auth/google/callback",
+  scope: ["profile", "email"]
+},
+  async (token, tokenSecret, profile, done) => {
+    try {
+      const email = profile.emails[0].value;
+      let userResult = await db.query("SELECT * FROM users WHERE google_id = $1", [profile.id]);
+      if (userResult.rows.length === 0) {
+        userResult = await db.query("INSERT INTO users (username, google_id) VALUES ($1, $2) RETURNING *", [email, profile.id]);
+      };
+
+      const user = userResult.rows[0];
+      return done(null, user);
+    } catch (error) {
+      return done(error, null);
+    }
+  }
+));
+
+passport.serializeUser((user, done) => {
+  done(null, user.user_id);
+});
+
+passport.deserializeUser(async (id, done) =>{
+  try {
+    const userResult = await db.query("SELECT * FROM users WHERE user_id = $1", [id]);
+    done(null, userResult.rows[0]);
+  } catch (error) {
+    done(error, null);
+  }
+});
 
 
 //API registration
@@ -160,6 +203,8 @@ app.get("/user-data", authenticateToken, async (req, res) => {
 //API save user data
 app.post("/save-data", authenticateToken, async (req, res) => {
   const { data } = req.body;
+  console.log(req.body);
+  console.log(req.user.id);
   try {
     await db.query(
       "INSERT INTO users_data (user_id, fullname, email, phone_number, address, education, experience, skills) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)",
@@ -186,6 +231,8 @@ app.post("/save-data", authenticateToken, async (req, res) => {
 //API update user data
 app.put("/update-data", authenticateToken, async (req, res) => {
   const { data } = req.body;
+  console.log(req.body);
+  console.log(req.user.id);
   try {
     await db.query(
       "UPDATE users_data SET fullname = $1, email = $2, phone_number = $3, address = $4, education = $5, experience = $6, skills = $7 WHERE user_id = $8",
@@ -208,6 +255,19 @@ app.put("/update-data", authenticateToken, async (req, res) => {
     res.status(500).send("Error updating user data");
   }
 });
+
+app.get("/auth/google", 
+  passport.authenticate("google", { scope: ["profile", "email"] })
+);
+
+app.get("/auth/google/callback", 
+  passport.authenticate("google", {failureRedirect: "/"}),
+  (req, res) => {
+    const token = generateToken(req.user);
+    res.redirect(`https://resume-creator-client.vercel.app/login-success?token=${token}`);
+  }
+);
+
 
 app.listen(port, () =>
   console.log(`Server running on port ${port}, http://localhost:${port}`)

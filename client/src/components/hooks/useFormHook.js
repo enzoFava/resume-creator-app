@@ -30,6 +30,7 @@ const useFormHook = (setIsDataSubmitted) => {
                 console.error("Error fetching data ", error)
                 setLoadedData(null);
                 setPdfData(null);
+                setLoggedIn(true);
             }
         };
         fetchData();

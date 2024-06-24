@@ -5,6 +5,7 @@ import PersonalData from "./components/pages/PersonalData";
 import Skills from "./components/pages/Skills";
 import Education from "./components/pages/Education";
 import Experience from "./components/pages/Experience";
+import LoginSuccess from "./components/LoginSuccess";
 
 function App() {
   const [pdfData, setPdfData] = useState(null);
@@ -13,6 +14,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/login-success" element={<LoginSuccess />} />
         <Route path="/" element={<Home />} />
         <Route path="/personal-data" element={<PersonalData setPdfData={setPdfData} setIsDataSubmitted={setIsDataSubmitted} />} />
         <Route path="/skills" element={<Skills setPdfData={setPdfData} setIsDataSubmitted={setIsDataSubmitted} />} />

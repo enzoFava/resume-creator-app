@@ -1,7 +1,10 @@
 import React, { useState } from "react";
-import { login, register, googleLogin } from "../api";
+import { login, register } from "../api";
 import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
+import GoogleLoginButton from "./GoogleLoginButton";
+import Divider from '@mui/material/Divider';
+
 
 function CheckUser({setLoggedIn}) {
   const [username, setUsername] = useState("");
@@ -48,6 +51,11 @@ function CheckUser({setLoggedIn}) {
     <div className="user-validation">
       <form>
         <h2> Log In</h2>
+        <p>With Google: </p>
+        <div className="myButtons">
+          <GoogleLoginButton />
+        </div>
+        <Divider>OR</Divider>
         <div className="form-group">
           <label>Username:</label>
           <input

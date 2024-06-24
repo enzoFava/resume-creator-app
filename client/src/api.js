@@ -25,9 +25,7 @@ export const login = (username, password) => {
 export const register = (username, password) => {
   return api.post("/register", {username, password});
 };
-export const googleRegister = () => api.get("/auth/google");
 export const checkLogin = () => api.get("/check-login");
 export const getUserData = () => api.get("/user-data");
 export const saveUserData = (data) => api.post("/save-data", { data });
 export const updateUserData = (data) => api.put("/update-data", { data });
-export const googleLogin = () => api.get("/google-auth");
