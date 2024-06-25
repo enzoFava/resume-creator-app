@@ -203,16 +203,14 @@ app.get("/user-data", authenticateToken, async (req, res) => {
 //API save user data
 app.post("/save-data", authenticateToken, async (req, res) => {
   const { data } = req.body;
-  console.log(req.body);
-  console.log(req.user.id);
   try {
     await db.query(
       "INSERT INTO users_data (user_id, fullname, email, phone_number, address, education, experience, skills) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)",
       [
         req.user.id,
-        data.fullName,
+        data.fullname,
         data.email,
-        data.phoneNumber,
+        data.phone_number,
         data.address,
         data.education,
         data.experience,
@@ -231,8 +229,6 @@ app.post("/save-data", authenticateToken, async (req, res) => {
 //API update user data
 app.put("/update-data", authenticateToken, async (req, res) => {
   const { data } = req.body;
-  console.log(req.body);
-  console.log(req.user.id);
   try {
     await db.query(
       "UPDATE users_data SET fullname = $1, email = $2, phone_number = $3, address = $4, education = $5, experience = $6, skills = $7 WHERE user_id = $8",
