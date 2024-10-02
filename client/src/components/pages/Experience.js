@@ -4,6 +4,8 @@ import { Button } from "@mui/material";
 import Navbar from "../NewHeader";
 import useFormHook from "../hooks/useFormHook";
 import TextAreaField from "../TextAreaField";
+import { ToastContainer, toast, Bounce } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function Experience({setIsDataSubmitted}) {
   const navigate = useNavigate();
@@ -64,6 +66,20 @@ function Experience({setIsDataSubmitted}) {
         >
           {loadedData ? "Update" : "Save"} Data
         </Button>
+        <ToastContainer
+          position="bottom-right"
+          autoClose={2000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="dark"
+          transition={Bounce}
+        />
+
       </div>
     </>
   );

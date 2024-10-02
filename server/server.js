@@ -18,10 +18,6 @@ const db = new pg.Client({
   database: process.env.DB_NAME,
   password: process.env.DB_PASSWORD,
   port: 5432,
-  ssl: {
-    require: true,
-    rejectUnauthorized: false,
-  },
 });
 
 db.connect(function (err) {
@@ -35,7 +31,7 @@ const SECRET_KEY = process.env.SECRET_KEY;
 
 // Function to generate a token with expiration time
 const generateToken = (user) => {
-  return jwt.sign({ username: user.username, id: user.user_id }, SECRET_KEY, {
+  return jwt.sign({ username: user.username, id: user.id }, SECRET_KEY, {
     expiresIn: "1h", // Token expires in 1 sec
   });
 };
@@ -43,10 +39,10 @@ const generateToken = (user) => {
 const authenticateToken = (req, res, next) => {
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];
-  if (!token) return res.sendStatus(401);
+  if (!token) return res.sendStatus(401).json({message: "No token found"});
 
   jwt.verify(token, SECRET_KEY, (err, user) => {
-    if (err) return res.sendStatus(403);
+    if (err) return res.sendStatus(403).json({message: "Error verifying token"});
     req.user = user;
     next();
   });
@@ -55,7 +51,7 @@ const authenticateToken = (req, res, next) => {
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cors({
-  origin: "https://resume-creator-client.vercel.app", // Allow requests from React app
+  origin: "http://localhost:3000", // Allow requests from React app "https://resume-creator-client.vercel.app"
   credentials: true
 }));
 app.use(session({ secret: SECRET_KEY, resave: false, saveUninitialized: false }));
@@ -67,7 +63,7 @@ const saltRounds = 10;
 passport.use(new GoogleStrategy({
   clientID: process.env.GOOGLE_CLIENT_ID,
   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-  callbackURL: "https://resume-creator-server.vercel.app/auth/google/callback",
+  callbackURL: "http://localhost:5000/auth/google/callback", // "https://resume-creator-server.vercel.app/auth/google/callback"
   scope: ["profile", "email"]
 },
   async (token, tokenSecret, profile, done) => {
@@ -79,6 +75,7 @@ passport.use(new GoogleStrategy({
       };
 
       const user = userResult.rows[0];
+      console.log("GOOGLE USER : ", user);
       return done(null, user);
     } catch (error) {
       return done(error, null);
@@ -127,6 +124,7 @@ app.post("/register", async (req, res) => {
       );
 
       const newUser = newUserResult.rows[0];
+      console.log("REGISTERED : ", newUser)
 
       if (!newUser) {
         console.error("Error creating new user");
@@ -188,7 +186,8 @@ app.get("/user-data", authenticateToken, async (req, res) => {
       [req.user.id]
     );
     if (userResult.rows.length > 0) {
-      res.json(userResult.rows[0]);
+      res.json(userResult.rows[0]); // send user data
+      console.log(userResult.rows[0], "DATA FROM DB");
     } else {
       res.status(404).send("No data found");
     }
@@ -260,7 +259,7 @@ app.get("/auth/google/callback",
   passport.authenticate("google", {failureRedirect: "/"}),
   (req, res) => {
     const token = generateToken(req.user);
-    res.redirect(`https://resume-creator-client.vercel.app/login-success?token=${token}`);
+    res.redirect(`http://localhost:3000/login-success?token=${token}`); // `https://resume-creator-client.vercel.app/login-success?token=${token}`
   }
 );
 
