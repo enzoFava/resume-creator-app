@@ -131,7 +131,7 @@ app.post("/register", async (req, res) => {
       }
 
       const token = generateToken(newUser);
-      res.json({ token });
+      return res.json({ token });
     });
   } catch (error) {
     console.error("Error during registering ", error);
@@ -163,18 +163,18 @@ app.post("/login", async (req, res) => {
     }
 
     const token = generateToken(user);
-    res.json({ token });
+    return res.json({ token });
 
     // db.end();
   } catch (error) {
     console.error("Error during login", error);
-    res.status(500).send("Error logging in");
+    return res.status(500).send("Error logging in");
   }
 });
 
 //API Check if logged in
 app.get("/check-login", authenticateToken, (req, res) => {
-  res.json({ loggedIn: true, user: req.user });
+  return res.json({ loggedIn: true, user: req.user });
 });
 
 //API Fetch user data
@@ -185,15 +185,15 @@ app.get("/user-data", authenticateToken, async (req, res) => {
       [req.user.id]
     );
     if (userResult.rows.length > 0) {
-      res.json(userResult.rows[0]); // send user data
+      return res.json(userResult.rows[0]); // send user data
       console.log(userResult.rows[0], "DATA FROM DB");
     } else {
-      res.status(404).send("No data found");
+      return res.status(404).send("No data found");
     }
     // db.end();
   } catch (error) {
     console.error("Error fetching data", error);
-    res.status(500).send("Error fetching data");
+    return res.status(500).send("Error fetching data");
   }
 });
 
@@ -215,12 +215,12 @@ app.post("/save-data", authenticateToken, async (req, res) => {
         data.skills,
       ]
     );
-    res.send("Data saved");
+    return res.send("Data saved");
 
     // db.end();
   } catch (error) {
     console.error("Error saving user data", error);
-    res.status(500).send("Error saving user data");
+    return res.status(500).send("Error saving user data");
   }
 });
 
@@ -241,12 +241,12 @@ app.put("/update-data", authenticateToken, async (req, res) => {
         req.user.id,
       ]
     );
-    res.send("Data updated");
+    return res.send("Data updated");
 
     // db.end();
   } catch (error) {
     console.error("Error updating user data", error);
-    res.status(500).send("Error updating user data");
+    return res.status(500).send("Error updating user data");
   }
 });
 
@@ -258,7 +258,7 @@ app.get("/auth/google/callback",
   passport.authenticate("google", {failureRedirect: "/"}),
   (req, res) => {
     const token = generateToken(req.user);
-    res.redirect(`http://localhost:3000/login-success?token=${token}`); // `https://resume-creator-client.vercel.app/login-success?token=${token}`
+    return res.redirect(`http://localhost:3000/login-success?token=${token}`); // `https://resume-creator-client.vercel.app/login-success?token=${token}`
   }
 );
 
