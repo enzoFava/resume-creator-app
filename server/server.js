@@ -38,10 +38,10 @@ const generateToken = (user) => {
 const authenticateToken = (req, res, next) => {
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];
-  if (!token) return res.sendStatus(401).json({message: "No token found"});
+  if (!token) return res.sendStatus(401);
 
   jwt.verify(token, SECRET_KEY, (err, user) => {
-    if (err) return res.sendStatus(403).json({message: "Error verifying token"});
+    if (err) return res.sendStatus(403);
     req.user = user;
     next();
   });
