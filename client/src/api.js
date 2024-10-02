@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://localhost:5000/", // "https://resume-creator-server.vercel.app/" || 
+  baseURL: "https://resume-creator-server.vercel.app/", // "http://localhost:5000/" || 
 });
 
 // Add token to the request header

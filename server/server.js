@@ -13,11 +13,10 @@ const port = process.env.PORT || 5000;
 const app = express();
 
 const db = new pg.Client({
-  user: process.env.DB_USER,
-  host: process.env.DB_HOST,
-  database: process.env.DB_NAME,
-  password: process.env.DB_PASSWORD,
-  port: 5432,
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false,
+  },
 });
 
 db.connect(function (err) {
@@ -69,9 +68,9 @@ passport.use(new GoogleStrategy({
   async (token, tokenSecret, profile, done) => {
     try {
       const email = profile.emails[0].value;
-      let userResult = await db.query("SELECT * FROM users WHERE google_id = $1", [profile.id]);
+      let userResult = await db.query("SELECT * FROM resume_users WHERE google_id = $1", [profile.id]);
       if (userResult.rows.length === 0) {
-        userResult = await db.query("INSERT INTO users (username, google_id) VALUES ($1, $2) RETURNING *", [email, profile.id]);
+        userResult = await db.query("INSERT INTO resume_users (username, google_id) VALUES ($1, $2) RETURNING *", [email, profile.id]);
       };
 
       const user = userResult.rows[0];
@@ -89,7 +88,7 @@ passport.serializeUser((user, done) => {
 
 passport.deserializeUser(async (id, done) =>{
   try {
-    const userResult = await db.query("SELECT * FROM users WHERE user_id = $1", [id]);
+    const userResult = await db.query("SELECT * FROM resume_users WHERE user_id = $1", [id]);
     done(null, userResult.rows[0]);
   } catch (error) {
     done(error, null);
@@ -103,7 +102,7 @@ app.post("/register", async (req, res) => {
 
   try {
     const userResult = await db.query(
-      "SELECT * FROM users WHERE username = $1",
+      "SELECT * FROM resume_users WHERE username = $1",
       [username]
     );
 
@@ -119,7 +118,7 @@ app.post("/register", async (req, res) => {
       }
 
       const newUserResult = await db.query(
-        "INSERT INTO users (username, password) VALUES ($1, $2) RETURNING *",
+        "INSERT INTO resume_users (username, password) VALUES ($1, $2) RETURNING *",
         [username, hash]
       );
 
@@ -146,7 +145,7 @@ app.post("/login", async (req, res) => {
 
   try {
     const userResult = await db.query(
-      "SELECT * FROM users WHERE username = $1",
+      "SELECT * FROM resume_users WHERE username = $1",
       [username]
     );
 
@@ -182,7 +181,7 @@ app.get("/check-login", authenticateToken, (req, res) => {
 app.get("/user-data", authenticateToken, async (req, res) => {
   try {
     const userResult = await db.query(
-      "SELECT * FROM users_data WHERE user_id = $1",
+      "SELECT * FROM resume_users_data WHERE user_id = $1",
       [req.user.id]
     );
     if (userResult.rows.length > 0) {
@@ -204,7 +203,7 @@ app.post("/save-data", authenticateToken, async (req, res) => {
   const { data } = req.body;
   try {
     await db.query(
-      "INSERT INTO users_data (user_id, fullname, email, phone_number, address, education, experience, skills) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)",
+      "INSERT INTO resume_users_data (user_id, fullname, email, phone_number, address, education, experience, skills) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)",
       [
         req.user.id,
         data.fullname,
@@ -230,7 +229,7 @@ app.put("/update-data", authenticateToken, async (req, res) => {
   const { data } = req.body;
   try {
     await db.query(
-      "UPDATE users_data SET fullname = $1, email = $2, phone_number = $3, address = $4, education = $5, experience = $6, skills = $7 WHERE user_id = $8",
+      "UPDATE resume_users_data SET fullname = $1, email = $2, phone_number = $3, address = $4, education = $5, experience = $6, skills = $7 WHERE user_id = $8",
       [
         data.fullname,
         data.email,
