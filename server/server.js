@@ -50,7 +50,7 @@ const authenticateToken = (req, res, next) => {
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cors({
-  origin: "http://localhost:3000", // Allow requests from React app "https://resume-creator-client.vercel.app"
+  origin: "https://resume-creator-client.vercel.app", // Allow requests from React app "http://localhost:3000"
   credentials: true
 }));
 app.use(session({ secret: SECRET_KEY, resave: false, saveUninitialized: false }));
