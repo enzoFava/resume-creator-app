@@ -39,10 +39,6 @@ function Home() {
     };
   
     verifyLogin();
-  
-    const interval = setInterval(verifyLogin, 120000);
-  
-    return () => clearInterval(interval);
   }, []);
 
   const logOut = () => {
