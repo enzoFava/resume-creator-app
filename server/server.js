@@ -142,13 +142,14 @@ app.post("/register", async (req, res) => {
 //API login
 app.post("/login", async (req, res) => {
   const { username, password } = req.body;
+  console.log("ROUTE HIT", username); // DEBUG TO LOGIN ROUTE
 
   try {
     const userResult = await db.query(
       "SELECT * FROM resume_users WHERE username = $1",
       [username]
     );
-
+    console.log("FETCHED USER FROM DB", userResult.rows[0]) // DEBUG TO GET USER FOR LOGIN
     if (userResult.rows.length === 0) {
       console.log("User not found");
       return res.status(400).send("User not found");
@@ -156,6 +157,7 @@ app.post("/login", async (req, res) => {
 
     const user = userResult.rows[0];
     const validPassword = await bcrypt.compare(password, user.password);
+    console.log("CHECKING PASSWORD VALIDATION", validPassword); // DEBUG TO VALIDATE PASSWORD FOR LOGIN
 
     if (!validPassword) {
       console.log("Invalid password.");
@@ -163,6 +165,7 @@ app.post("/login", async (req, res) => {
     }
 
     const token = generateToken(user);
+    console.log("GENERATED TOKEN FOR THE USER", token); // DEBUG TO CHECK IF THE TOKEN IS CREATED FOR THE USER
     return res.json({ token });
 
     // db.end();
